@@ -2,14 +2,13 @@
 //  Item.swift
 //  Todoey
 //
-//  Created by David on 3/13/18.
-//  Copyright © 2018 David. All rights reserved.
+//  Created by Angela Yu on 24/11/2017.
+//  Copyright © 2017 Angela Yu. All rights reserved.
 //
 
 import Foundation
 
-
-class Item: Codable {
+class Item {
     var title: String = ""
     var done: Bool = false
 }

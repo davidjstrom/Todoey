@@ -1,9 +1,9 @@
 //
-//  TodoListViewController.swift
+//  ViewController.swift
 //  Todoey
 //
-//  Created by David on 3/4/18.
-//  Copyright © 2018 David. All rights reserved.
+//  Created by Angela Yu on 16/11/2017.
+//  Copyright © 2017 Angela Yu. All rights reserved.
 //
 
 import UIKit
@@ -13,37 +13,38 @@ class TodoListViewController: UITableViewController {
     var itemArray = [Item]()
     let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
     
-        override func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
-            
+        
+        print(dataFilePath)
+        
         loadItems()
         
-        // Do any additional setup after loading the view, typically from a nib.
     }
-
-    //MARK - Tableview datasource
+    
+    //MARK - Tableview Datasource Methods
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return itemArray.count
     }
     
-    
-     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
-    
+        
         let item = itemArray[indexPath.row]
+        
         cell.textLabel?.text = item.title
         
-        //Ternary operator
+        //Ternary operator ==>
         // value = condition ? valueIfTrue : valueIfFalse
         
         cell.accessoryType = item.done ? .checkmark : .none
         
-        saveItems()
-        
         return cell
-        
     }
+    
+    //MARK - TableView Delegate Methods
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
@@ -51,22 +52,20 @@ class TodoListViewController: UITableViewController {
         
         saveItems()
         
-
         tableView.deselectRow(at: indexPath, animated: true)
-
         
     }
     
-  
-    
-    
+    //MARK - Add New Items
     
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
         
-        let alert = UIAlertController(title: "Add New Todoey Item", message: "", preferredStyle: .alert)
         var textField = UITextField()
-        let action = UIAlertAction(title: "Add Item", style: .default) {(action) in
-            //what will happen once the user clicks the add item button in our UI Alert
+        
+        let alert = UIAlertController(title: "Add New Todoey Item", message: "", preferredStyle: .alert)
+        
+        let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
+            //what will happen once the user clicks the Add Item button on our UIAlert
             
             let newItem = Item()
             newItem.title = textField.text!
@@ -74,48 +73,49 @@ class TodoListViewController: UITableViewController {
             self.itemArray.append(newItem)
             
             self.saveItems()
-            
-         //   let data = encoder.encode(itemArray)
-            
         }
         
         alert.addTextField { (alertTextField) in
-            alertTextField.placeholder = "Create new Item"
+            alertTextField.placeholder = "Create new item"
             textField = alertTextField
             
         }
-    
+        
+        
         alert.addAction(action)
-        present(alert, animated: true, completion:nil)
+        
+        present(alert, animated: true, completion: nil)
         
     }
+    
+    //MARK - Model Manupulation Methods
     
     func saveItems() {
         let encoder = PropertyListEncoder()
         
-        do{
+        do {
             let data = try encoder.encode(itemArray)
             try data.write(to: dataFilePath!)
         } catch {
-            print("error encoding item array, \(error)")
+            print("Error encoding item array, \(error)")
         }
         
         self.tableView.reloadData()
-
     }
     
     func loadItems() {
         if let data = try? Data(contentsOf: dataFilePath!) {
             let decoder = PropertyListDecoder()
             do {
-            itemArray = try decoder.decode([Item].self, from: data)
+                itemArray = try decoder.decode([Item].self, from: data)
             } catch {
-                print("lots of errors\(error)")
+                print("Error decoding item array, \(error)")
             }
         }
     }
     
+    
+    
 }
-//MarkAdd new items seciont.
 
 
