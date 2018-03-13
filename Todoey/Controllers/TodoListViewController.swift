@@ -38,9 +38,7 @@ class TodoListViewController: UITableViewController {
         // value = condition ? valueIfTrue : valueIfFalse
         
         cell.accessoryType = item.done ? .checkmark : .none
-        
-        saveItems()
-        
+                
         return cell
         
     }
